@@ -8,7 +8,7 @@ public class Queries {
 
     public static final String REVSISE_BUS_DETAILS="Update fleetmanagementsystem.busdetails set makeYear=:makeYear,"
     		+ "numberOfWheel=:numberOfWheel,odometerReading=:odometerReading,scheduledDate=:scheduledDate,busName=:busName,isAirConditioned=:isAirConditioned,capacity=:capacity,bus_stat=:status,permitStatus=:permitStatus,"
-    		+ "garageId=:garageId where busId=:busId";
+    		+ "garageId=:garageId,image=:image where busId=:busId";
     
     public static final String REMOVE_BUS_DETAIL="DELETE FROM fleetmanagementsystem.busdetails where busId = :busId";
 
@@ -38,5 +38,9 @@ public class Queries {
     		":permit,\r\n" + 
     		":garageId\r\n" + 
     		")";
+
+	public static final String UPDATE_IMAGE = "Update fleetmanagementsystem.busdetails set image=:image where busId=:busId";
+
+	public static final String GET_SPECIFIC_QUERY = "SELECT * FROM fleetmanagementsystem.busdetails ORDER BY busId DESC LIMIT 1";
 }
 

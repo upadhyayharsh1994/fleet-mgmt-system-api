@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fleetmanagement.constants.FleetManagementConstant;
 import com.fleetmanagement.domain.input.BusDetailsInput;
@@ -77,15 +80,16 @@ public class BusController {
 		return busService.getAllBusDetails();
 	}
 	
-	@PostMapping(value= FleetManagementConstant.REVISE_BUS_DETAIL)
+	@PostMapping(value= FleetManagementConstant.REVISE_BUS_DETAIL, consumes = {"multipart/form-data","application/octet-stream"})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success", response = ResponseEntity.class)})
 	@ApiOperation(value = "API to edit bus details based on Id")
 	@ResponseStatus
 	@CrossOrigin
-	public ResponseEntity<?> reviseBusDetails(@RequestBody BusDetailsInput busDetails) {
+	public ResponseEntity<?> reviseBusDetails(@RequestPart("busDetails") BusDetailsInput busDetails,
+			@RequestPart("busImage") MultipartFile busImage) {
 		String busId = Integer.toString(busDetails.getBusId());
 		logger.info("Revise Bus details for id {}",busId);
-		int rowsAffected=busService.reviseBusDetails(busId,busDetails);
+		int rowsAffected=busService.reviseBusDetails(busId,busDetails,busImage);
 		if(rowsAffected>0)
 		    return new ResponseEntity<>("Status: Update Successfull", HttpStatus.OK);
 		else if(rowsAffected==-1)
@@ -112,18 +116,19 @@ public class BusController {
 	}
 	
 	
-	@PostMapping(value= FleetManagementConstant.INSERT_BUS_DETAILS)
+	@PostMapping(value= FleetManagementConstant.INSERT_BUS_DETAILS,consumes = {"multipart/form-data","application/octet-stream"})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success", response = Object.class)})
 	@ApiOperation(value = "API to edit bus details based on Id")
 	@ResponseStatus
 	@CrossOrigin
-	public ResponseEntity<?> insertBusDetails(@RequestBody BusDetailsInput busDetails) {	
+	public ResponseEntity<?> insertBusDetails(@RequestPart("busDetails") BusDetailsInput busDetails,
+			@RequestPart("busImage") MultipartFile busImage) {	
 		logger.info("Inserting Bus details {}",busDetails);
 		if(busDetails == null) {
 			System.out.println("insert____");
 			throw new FleetException(ExceptionEnum.INPUT_VALIDATION_EXCEPTION, "Input Failed");
 		}
-		Boolean rowsAffected = busService.insertBusDetails(busDetails);
+		Boolean rowsAffected = busService.insertBusDetails(busDetails,busImage);
 		if(rowsAffected)
 		    return new ResponseEntity<>("Status: Update Successfull", HttpStatus.OK);
 		else 

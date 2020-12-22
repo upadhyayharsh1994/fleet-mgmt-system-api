@@ -1,6 +1,9 @@
 package com.fleetmanagement.domain.output;
 
+import java.sql.Blob;
 import java.sql.Date;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -19,9 +22,16 @@ public class BusDetails {
 	private Integer garageId;
 	private String busName;
 	private Date scheduledDate;
+	private byte[] image;
 	
 	public Date getScheduledDate() {
 		return scheduledDate;
+	}
+	public byte[] getImage() {
+		return image;
+	}
+	public void setImage(byte[] image) {
+		this.image = image;
 	}
 	public void setScheduledDate(Date scheduledDate) {
 		this.scheduledDate = scheduledDate;

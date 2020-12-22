@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fleetmanagement.dao.BusServiceDao;
 import com.fleetmanagement.domain.input.BusDetailsInput;
@@ -27,9 +28,9 @@ public class BusServiceImpl implements BusService{
 	}
 
 	@Override
-	public int reviseBusDetails(String busId, BusDetailsInput busDetails) {
+	public int reviseBusDetails(String busId, BusDetailsInput busDetails,MultipartFile busImage) {
 		// TODO Auto-generated method stub
-		return busServiceDao.reviseBusDetails(busId, busDetails);
+		return busServiceDao.reviseBusDetails(busId, busDetails,busImage);
 	}
 
 	@Override
@@ -39,9 +40,9 @@ public class BusServiceImpl implements BusService{
 	}
 
 	@Override
-	public Boolean insertBusDetails(BusDetailsInput busDetails) {
+	public Boolean insertBusDetails(BusDetailsInput busDetails,MultipartFile busImage) {
 		// TODO Auto-generated method stub
-		return busServiceDao.insertBusDetails(busDetails);
+		return busServiceDao.insertBusDetails(busDetails,busImage);
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class BusServiceImpl implements BusService{
 
 		
 
-		if(busDetails.getStatus().equals("Ready for Use") && busDetails.getOdometerReading() > 100000)
+		if(busDetails.getStatus().equalsIgnoreCase("readyToUse") && busDetails.getOdometerReading() > 100000)
 
 		{
 
@@ -103,7 +104,7 @@ public class BusServiceImpl implements BusService{
 						
 			
 			}
-		else if(busDetails.getStatus().equals("Ready for Use")){
+		else if(busDetails.getStatus().equalsIgnoreCase("readyToUse")){
 			if(busDetails.getNumberOfWheels()==24) {
 				return startingPriceOf24wheels;
 			}

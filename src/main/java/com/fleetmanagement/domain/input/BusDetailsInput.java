@@ -1,6 +1,9 @@
 package com.fleetmanagement.domain.input;
 
+import java.sql.Blob;
 import java.sql.Date;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public class BusDetailsInput {
 
@@ -11,6 +14,7 @@ public class BusDetailsInput {
 	private String airConditioner;
 	private String capacity;
 	private Date scheduledDate;
+
 	public String getBusName() {
 		return busName;
 	}

@@ -2,6 +2,7 @@ package com.fleetmanagement.dao.impl;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fleetmanagement.dao.BusServiceDao;
 import com.fleetmanagement.domain.input.BusDetailsInput;
@@ -65,7 +67,7 @@ public class BusServiceDaoImpl implements BusServiceDao{
 	}
 	
 	@Override
-	public int reviseBusDetails(String busId, BusDetailsInput busDetails) {
+	public int reviseBusDetails(String busId, BusDetailsInput busDetails,MultipartFile busImage) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("busId", busId);
 		paramMap.put("busName", busDetails.getBusName());
@@ -80,6 +82,7 @@ public class BusServiceDaoImpl implements BusServiceDao{
 		paramMap.put("scheduledDate",busDetails.getScheduledDate());
 		int rowsAffected=0;
 		try {
+			paramMap.put("image", busImage.getBytes());
 			rowsAffected = namedParameterJdbcTemplate.update(Queries.REVSISE_BUS_DETAILS, paramMap);
 			return rowsAffected;
 		} catch (Exception e){
@@ -102,7 +105,7 @@ public class BusServiceDaoImpl implements BusServiceDao{
 
 	private List<BusDetails> generateBusResponse(List<Map<String, Object>> detailsMap) {
 		List<BusDetails> listOfBusDetails = new ArrayList<BusDetails>();
-		
+		byte[] image = null;
 		for(Map<String, Object> busRecord : detailsMap) {
 			BusDetails busDetails=new BusDetails();
 			if(busRecord.get("busId") != null )
@@ -129,6 +132,8 @@ public class BusServiceDaoImpl implements BusServiceDao{
 				busDetails.setBusName((String)busRecord.get("busName"));
 			if(busRecord.get("scheduledDate") != null )
 				busDetails.setScheduledDate((Date)busRecord.get("scheduledDate"));
+			if(busRecord.get("image") != null)
+				 busDetails.setImage((byte[]) busRecord.get("image"));
 			listOfBusDetails.add(busDetails);
 		}
 	
@@ -137,7 +142,7 @@ public class BusServiceDaoImpl implements BusServiceDao{
 	}
 
 	@Override
-	public Boolean insertBusDetails(BusDetailsInput busDetails) {
+	public Boolean insertBusDetails(BusDetailsInput busDetails,MultipartFile busImage) {
 		log.info("Inserting the following nus details:: {}", busDetails);
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("isAirConditioned", StringUtils.isEmpty(busDetails.getAirConditioner()) ? "" : busDetails.getAirConditioner());
@@ -154,11 +159,21 @@ public class BusServiceDaoImpl implements BusServiceDao{
 		try {
 			int count = namedParameterJdbcTemplate.update(Queries.INSERT_BUS_DETAILS, paramMap);
 			if(count > 0) {
-				return true;
+				paramMap.clear();
+				List<Map<String, Object>> busDetailsMap = namedParameterJdbcTemplate.queryForList(Queries.GET_SPECIFIC_QUERY, paramMap);
+				BusDetails bus = generateBusResponse(busDetailsMap).get(0);
+				if(!ObjectUtils.isEmpty(bus))
+				{
+					paramMap.clear();
+					paramMap.put("image", busImage.getBytes());
+					paramMap.put("busId", bus.getBusId());
+					count = namedParameterJdbcTemplate.update(Queries.UPDATE_IMAGE, paramMap);
+					if(count > 0)
+						return true;
+				}
 			}
 		} catch(Exception e) {
 			throw new FleetException(ExceptionEnum.INPUT_VALIDATION_EXCEPTION, "Input Failed");
-		//	throw new FleetException("Exception : InsertBusDetails:::", e);
 		}
 		return false;
 	}
