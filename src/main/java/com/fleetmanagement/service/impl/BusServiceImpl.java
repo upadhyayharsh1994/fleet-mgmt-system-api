@@ -53,7 +53,7 @@ public class BusServiceImpl implements BusService{
 		double startingPriceOf24wheels=120000;
 		double startingPriceOf36wheels=160000;
 		boolean isNumberOfWheels24 = false;
-
+		System.out.println("check the resale");
 		if(Integer.valueOf(busDetails.getMakeYear())<=1972)
 
 		{
@@ -80,7 +80,7 @@ public class BusServiceImpl implements BusService{
 
 		{
 
-			if(busDetails.getCapacity()== "24" || busDetails.getCapacity()=="36") 
+			if(busDetails.getCapacity().equals("24") || busDetails.getCapacity().equals("36")) 
 
 			{
 
@@ -90,7 +90,7 @@ public class BusServiceImpl implements BusService{
 
 				double actualPriceOfBusAfterMilesCost=numberOfMiles*0.10;
 				
-				if(busDetails.getCapacity()== "24") {
+				if(busDetails.getCapacity().equals("24")) {
 					actualPriceOfBusAfterMilesCost=startingPriceOf24wheels-actualPriceOfBusAfterMilesCost;	
 				}
 				else {
@@ -105,7 +105,7 @@ public class BusServiceImpl implements BusService{
 			
 			}
 		else if(busDetails.getStatus().equalsIgnoreCase("readyToUse")){
-			if(busDetails.getCapacity()== "24") {
+			if(busDetails.getCapacity().equals("24")) {
 				return startingPriceOf24wheels;
 			}
 			return startingPriceOf36wheels;
