@@ -86,7 +86,7 @@ public class BusController {
 	@ResponseStatus
 	@CrossOrigin
 	public ResponseEntity<?> reviseBusDetails(@RequestPart("busDetails") BusDetailsInput busDetails,
-			@RequestPart("busImage") MultipartFile busImage) {
+			@RequestPart(value="busImage", required=false) MultipartFile busImage) {
 		String busId = Integer.toString(busDetails.getBusId());
 		logger.info("Revise Bus details for id {}",busId);
 		int rowsAffected=busService.reviseBusDetails(busId,busDetails,busImage);

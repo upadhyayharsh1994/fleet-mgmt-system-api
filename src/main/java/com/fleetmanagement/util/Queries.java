@@ -10,6 +10,10 @@ public class Queries {
     		+ "numberOfWheel=:numberOfWheel,odometerReading=:odometerReading,scheduledDate=:scheduledDate,busName=:busName,isAirConditioned=:isAirConditioned,capacity=:capacity,bus_stat=:status,permitStatus=:permitStatus,"
     		+ "garageId=:garageId,image=:image where busId=:busId";
     
+    public static final String REVSISE_BUS_DETAILS_NO_IMAGE="Update fleetmanagementsystem.busdetails set makeYear=:makeYear,"
+    		+ "numberOfWheel=:numberOfWheel,odometerReading=:odometerReading,scheduledDate=:scheduledDate,busName=:busName,isAirConditioned=:isAirConditioned,capacity=:capacity,bus_stat=:status,permitStatus=:permitStatus,"
+    		+ "garageId=:garageId where busId=:busId";
+    
     public static final String REMOVE_BUS_DETAIL="DELETE FROM fleetmanagementsystem.busdetails where busId = :busId";
 
     public static final String INSERT_BUS_DETAILS="insert\r\n" + 

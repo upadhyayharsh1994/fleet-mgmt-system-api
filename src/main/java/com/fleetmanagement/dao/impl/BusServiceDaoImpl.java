@@ -82,8 +82,13 @@ public class BusServiceDaoImpl implements BusServiceDao{
 		paramMap.put("scheduledDate",busDetails.getScheduledDate());
 		int rowsAffected=0;
 		try {
-			paramMap.put("image", busImage.getBytes());
-			rowsAffected = namedParameterJdbcTemplate.update(Queries.REVSISE_BUS_DETAILS, paramMap);
+			if(busImage != null)
+			{
+				paramMap.put("image", busImage.getBytes());
+				rowsAffected = namedParameterJdbcTemplate.update(Queries.REVSISE_BUS_DETAILS, paramMap);
+			}
+			else
+				rowsAffected = namedParameterJdbcTemplate.update(Queries.REVSISE_BUS_DETAILS_NO_IMAGE, paramMap);
 			return rowsAffected;
 		} catch (Exception e){
 			throw new FleetException("Exception in reviseBusDetails:: ", e);
